@@ -1,19 +1,18 @@
 FROM node:18
 
-# Install Python and pip
-RUN apt-get update && apt-get install -y python3 python3-pip python3-venv
+# Install Python
+RUN apt-get update && apt-get install -y python3 python3-pip
 
 WORKDIR /app
 
-COPY . .
-
-# Create and activate Python virtual environment, then install requirements
-RUN python3 -m venv /app/venv \
-    && . /app/venv/bin/activate \
-    && /app/venv/bin/pip install --upgrade pip \
-    && /app/venv/bin/pip install -r requirements.txt
-
+# Copy files
+COPY package*.json ./
 RUN npm install
+
+COPY requirements.txt ./
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 EXPOSE 3000
 
